@@ -1,0 +1,43 @@
+Linux 安装
+	远程登录 ssh root@192.168.31.1 回车之后输入密码
+
+	安装java  
+		yum list java* 或者(yum -y list java*)   查询哪些java 版本可以安装
+		yum -y remove java*  卸载java 相关软件
+
+		yum -y install java-1.7.0-openjdk* 安卓java7 相关版本
+
+	查找路径 find / -name java
+
+ 	重启资源
+		source  xxx 重新启动配置文件，使其立即生效
+
+	下载
+		wget xxx 下载
+
+	解压zip
+		uzip 
+
+	解压tar.gz
+		tar zxvf xxx
+
+	查看进程
+		ps -ef | grep xxx
+
+	卸载程序
+		rpm -qa|grep xxx 查看程序相关
+		rpm -e --nodeps xx  卸载
+
+	防火墙
+		chkconfig iptables off	 开机不启动防火墙
+		service iptables stop	//关闭防火墙
+		service   iptables statu 查看防火墙状态
+
+	关机，重启
+	    1、reboot
+　　    2、shutdown -r now 立刻重启(root用户使用)
+　　    3、shutdown -r 10 过10分钟自动重启(root用户使用)
+　　    4、shutdown -r 20:35 在时间为20:35时候重启(root用户使用)
+		shutdown -r 重启
+		shotdown -h 关机
+		halt 关机

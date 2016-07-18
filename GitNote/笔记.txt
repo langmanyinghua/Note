@@ -1,0 +1,50 @@
+1.配置全局信息 
+	git config --global user.name "xxx"
+	git config --global user.email "xxx@qq.com"
+	git config --list  查看配置信息
+
+2.提交暂存区
+	git status  查看状态
+	git add  xxx	添加到暂存区
+	git commit		提交到本地仓库
+	git commit -am ""
+
+	git commit -m ""  直接提交
+
+	git log  提交日志
+	git log  --oneline 一行显示	
+	git rm xxx  --cached   -f	//删除文件
+	git mv  修改文件名
+	git checkout 回滚
+
+	git revert  HEAD 撤回  ~x x为数字，倒数的版本
+	git reset HEAD 重置
+
+	git branch  查看当前分支
+	git branch xx  创建分支
+	git checkout xx 切换分支
+	git branch -a 查看所有分支（包括远程的）
+	git branch -D xx 删除分支
+
+	git checkout -b xx origin/xx   //创建分支，切换，并绑定远程的分支
+
+	git merge  xx(分支名) 
+	git diff xx xx  查看分支是否有区别
+	git diff master
+
+
+	git pull 更新
+	git push 发送到github
+	git push origin xx(分支名) 更新远程分支
+	git fetch 
+
+	git clone 从远程克隆
+
+	git remote add origin  "url"  本地仓库与远程仓库关联
+	git push origin master  提交本地分支   -u  添加关联
+
+	git remote -v 查看远程关联
+	git remote remove origin 删除关联
+	git remote rename origin 重新加载关联
+
+
