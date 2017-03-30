@@ -1,0 +1,172 @@
+//-------------------------MySQL 安装及相关操作 ------------------------------//
+	1、安装
+		通过yum 方式安装mysql
+			1、yum list mysql*  
+			2、yum -y list mysql*
+			3、yum list | grep mysql (所有包含mysql 的)
+		在查询列表中选择 server版本
+
+		yum -y install mysql-server.x86_64 
+
+	2、修改root 用户密码
+		第一次	mysqladmin -u root password root
+		第二次	mysqladmin -u root -p'旧密码' password '新密码'
+
+	3、连接远程msql
+		mysql配置文件路径 		/etc/my.cnf
+			mysql 默认只能本地连接，需要修改my.cnf 文件
+		mysql数据库文件存放位置 /var/lib/mysql
+
+		1、授权
+			1、进入到mysql 环境
+				grant all privileges on *.*  to  '用户名'@'ip' identified by '密码' with grant option;
+				用户名 root
+				ip 192.168.31.80 %表示所有ip
+				密码 123456
+
+				flush privileges;//刷新权限系统
+
+		2、开启防火墙（放在22端口之前，巨坑）
+
+			1、打开防火墙配置文件 vim /etc/sysconfig/iptables
+			2、添加规则  -A INPUT -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
+			3、重启防火墙 service iptables restart
+
+	4、开启启动mysql
+		chkconfig mysql on
+
+	5、修改编码格式
+		1、查看编码格式
+			show variables like 'char%'
+
+		2、修改（放在 symbolic-links=0 下面）
+			default-character-set=utf8
+			init_connect='SET NAMES utf8'
+			[client]
+			default-character-set=utf8
+
+
+//-------------------------Nginx 安装及相关操作 ------------------------------//
+	1、安装(/etc/nginx/nginx.conf)
+		1、卸载apache yum remove httpd -y
+
+		2、修改 yum源 yum install http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
+
+		3、通过yum 方式安装nginx
+			1、yum list nginx*  
+			2、yum -y list nginx*
+			3、yum list | grep nginx (所有包含nginx 的)
+		4、安装nginx
+			yum intall nignx-86.xx -y
+		5、开机启动
+			chkconfig nginx on
+
+		6、开启防火墙（无所谓放在22前后）
+
+			1、打开防火墙配置文件 vim /etc/sysconfig/iptables
+			2、添加规则  -A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
+			3、重启防火墙 service iptables restart
+
+			或者是
+
+			iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
+			service iptables save
+			service iptables restart
+
+
+//-------------------------JDK1.8 安装及相关操作 ------------------------------//
+	1、安装
+		1、yum 列出可以供选择的jdk版本
+			1、yum list java*  
+			2、yum -y list java*
+			3、yum list | grep java (所有包含nginx 的) 
+
+		2、安装(默认安装路径 /usr/lib/jvm/xx)
+			yum -y install java-1.8.0-openjdk-devel.x86_64(注意看版本，选择开发版，巨坑)
+
+	2、配置（默认情况不需要配置）
+		1、文件选择
+			1、修改 /etc/profile 文件（系统级别，所有的用户都可以使用）
+			2、(推荐)修改.bash_profile 文件（当前用户目录下面，作用于当前用户） 
+
+		2、修改
+			export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.121-0.b13.el6_8.x86_64
+			export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+			export PATH=$JAVA_HOME/bin:$PATH
+
+	3、重新加载配置文件
+		source .bash_profile
+		
+
+//-------------------------TomCat8 安装及相关操作 ------------------------------//
+	1、打开官网查询(http://tomcat.apache.org/) 查询可供下载的TomCat版本
+
+	2、下载 wget http://mirrors.hust.edu.cn/apache/tomcat/tomcat-8/v8.5.12/bin/apache-tomcat-8.5.12.tar.gz
+
+	3、解压 tar -zxv -f apache-tomcat-8.5.12.tar.gz
+
+	4、启动TomCat
+		./startup.sh
+
+	5、停止TomCat
+		./shutdown.sh
+
+	6、开启防火墙（一定放在22端口之前巨坑）
+		1、打开防火墙配置文件 vim /etc/sysconfig/iptables
+		2、添加规则  -A INPUT -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT
+		3、重启防火墙 service iptables restart
+
+
+//-------------------------FTP服务器端 安装及相关操作 ------------------------------//
+	1、安装(/etc/vsftpd)
+		1、yum list vsftpd
+		2、yum -y install vsftpd.x86_64
+
+	2、开机自启动
+		chkconfig vsftpd on
+
+	3、修改配置
+		1、
+			#chroot_list_enable=YES
+			# (default follows)
+			#chroot_list_file=/etc/vsftpd/chroot_list
+
+			修改为
+			
+			chroot_list_enable=YES
+			# (default follows)
+			chroot_list_file=/etc/vsftpd/chroot_list
+
+		2、在 /etc/vsftpd 下面创建文件 chroot_list (touch chroot_list)
+
+		3、写入ftp用户（一行一个用户名）
+			root
+			pan
+			panlaixing
+
+
+	4、添加FTP用户
+		useradd [-d(用户路径) -g(所属组) -s(是否允许ssh 登陆)] 用户名		
+		useradd -d /home/pan -g ftp -s /sbin/nologin(禁止用户通过ssh登陆) pan
+
+		passwd 用户名 回车之后 敲入秘密
+		passwd pan  123456
+
+	5、开启防火墙（一定放在22端口之前巨坑）
+		1、打开防火墙配置文件 vim /etc/sysconfig/iptables
+		2、添加规则  -A INPUT -p tcp -m state --state NEW -m tcp --dport 21 -j ACCEPT
+		3、重启防火墙 service iptables restart
+
+
+//-------------------------Centos 安装及相关操作 ------------------------------//
+
+开机启动
+	查看某个是否是开机启动
+	chkconfig --list | grep xx
+	设置开启启动服务
+	chkconfig xx on
+
+防火墙 
+	查看防火墙端口 iptables -L -n
+
+查看Centos 运行状态 top
